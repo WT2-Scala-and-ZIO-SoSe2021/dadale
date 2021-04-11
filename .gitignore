@@ -10,5 +10,13 @@ target/
 project/boot/
 project/plugins/project/
 
-# IDE specific
+# Intellij specific
 .idea
+
+# VS Code + Metals specific
+.vscode
+.metals
+
+**/.bloop
+.metals/
+metals.sbt
