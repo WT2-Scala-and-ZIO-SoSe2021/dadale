@@ -9,6 +9,8 @@ dist/*
 target/
 project/boot/
 project/plugins/project/
+.bsp/*
+
 
 # Intellij specific
 .idea
