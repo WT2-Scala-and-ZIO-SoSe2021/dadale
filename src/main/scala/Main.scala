@@ -23,4 +23,12 @@ object Main extends App {
       case _ => Array(card)
     }
   }
+
+  def determineHandValue(strategy: Array[Int] => Int)(hand: Array[Int]): Int = {
+    return sum(hand.map(h => values(h)).map(h => strategy(h)))
+  }
+
+  def isBust(value: Int): Boolean = {
+    return value > 21
+  }
 }

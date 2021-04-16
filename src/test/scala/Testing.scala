@@ -27,4 +27,17 @@ class Testing extends AnyFlatSpec {
     assert(tester.values(4)(0) == 4 && tester.values(4).length == 1)
     assert(tester.values(11)(0) == 1 && tester.values(11)(1) == 11 && tester.values(11).length == 2)
   }
+
+  "Hand Value Functions" should "work" in {
+    def strategy(arr: Array[Int]): Int = arr(0)
+    val hand = Array(2, 11)
+    val hand2 = Array(2, 5)
+
+    val handVal = tester.determineHandValue(strategy)_;
+    assert(handVal(hand) == 3)
+    assert(handVal(hand2) == 7)
+
+    assert(tester.isBust(12) == false)
+    assert((tester.isBust(23) == true))
+  }
 }
