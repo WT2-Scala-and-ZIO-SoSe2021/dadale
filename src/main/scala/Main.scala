@@ -31,4 +31,14 @@ object Main extends App {
   def isBust(value: Int): Boolean = {
     return value > 21
   }
+
+  def optimisticF = determineHandValue(max) _
+  
+  def pessimisticF = determineHandValue(min) _
+
+  def determineBestHandValue(hand: Array[Int]): Int = {
+    if (isBust(optimisticF(hand))) return pessimisticF(hand)
+
+    return optimisticF(hand)
+  }
 }

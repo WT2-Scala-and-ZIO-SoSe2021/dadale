@@ -33,11 +33,26 @@ class Testing extends AnyFlatSpec {
     val hand = Array(2, 11)
     val hand2 = Array(2, 5)
 
-    val handVal = tester.determineHandValue(strategy)_;
+    val handVal = tester.determineHandValue(strategy)_
     assert(handVal(hand) == 3)
     assert(handVal(hand2) == 7)
 
     assert(tester.isBust(12) == false)
     assert((tester.isBust(23) == true))
+  }
+
+  "Opt & Pess Functions" should "work" in {
+    val hand = Array(2, 11)
+
+    assert(tester.optimisticF(hand) == 13)
+    assert(tester.pessimisticF(hand) == 3)
+  }
+
+  "Best Hand Function" should "work" in {
+    val hand = Array(10, 11)
+    val hand2 = Array(10, 2, 11)
+
+    assert(tester.determineBestHandValue(hand) == 21)
+    assert(tester.determineBestHandValue(hand2) == 13)
   }
 }
