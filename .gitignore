@@ -9,7 +9,6 @@ dist/*
 target/
 project/boot/
 project/plugins/project/
-.bsp/sbt.json
 
 # Intellij specific
 .idea
