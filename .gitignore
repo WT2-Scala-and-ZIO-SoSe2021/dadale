@@ -1,0 +1,22 @@
+*.class
+*.log
+
+# sbt specific
+.cache/
+.history/
+.lib/
+dist/*
+target/
+project/boot/
+project/plugins/project/
+
+# Intellij specific
+.idea
+
+# VS Code + Metals specific
+.vscode
+.metals
+
+**/.bloop
+.metals/
+metals.sbt
