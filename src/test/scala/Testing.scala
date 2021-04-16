@@ -12,7 +12,7 @@ class Testing extends AnyFlatSpec {
   }
 
   "Parse Functions" should "work" in {
-    val cards = Array("2", "5", "7", "A", "K");
+    val cards = Array("2", "5", "7", "A", "K")
 
     assert(tester.parse("5") == 5)
     assert(tester.parse("A") == 11)
@@ -49,10 +49,17 @@ class Testing extends AnyFlatSpec {
   }
 
   "Best Hand Function" should "work" in {
-    val hand = Array(10, 11)
+    val hand1 = Array(10, 11)
     val hand2 = Array(10, 2, 11)
 
-    assert(tester.determineBestHandValue(hand) == 21)
+    assert(tester.determineBestHandValue(hand1) == 21)
     assert(tester.determineBestHandValue(hand2) == 13)
+
+    // Bonus task test cases
+    val hand3 = Array(9, 11, 11)
+    val hand4 = Array(11, 11, 11)
+
+    assert(tester.determineBestHandValue(hand3) == 21)
+    assert(tester.determineBestHandValue(hand4) == 13)
   }
 }

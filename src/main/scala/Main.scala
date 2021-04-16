@@ -1,14 +1,13 @@
 import scala.annotation.switch
 object Main extends App {
-  def max(arr: Array[Int]): Int = arr.reduceLeft((x, y) => x max y)
+  def max(arr: Array[Int]): Int = arr.reduce((x, y) => x max y)
 
-  def min(arr: Array[Int]): Int = arr.reduceLeft((x, y) => x min y)
+  def min(arr: Array[Int]): Int = arr.reduce((x, y) => x min y)
 
-  def sum(arr: Array[Int]): Int = arr.reduceLeft((x, y) => x + y)
+  def sum(arr: Array[Int]): Int = arr.reduce((x, y) => x + y)
 
   def parse(card: String): Int = {
     card match {
-      // "A", Jack - "J", Queen - "Q", King - "K"
       case "A" => 11
       case "J" | "Q" | "K" => 10
       case _ => card.toInt
@@ -37,6 +36,13 @@ object Main extends App {
   def pessimisticF = determineHandValue(min) _
 
   def determineBestHandValue(hand: Array[Int]): Int = {
+    // Aces won't ever be counted as 11 more than once 
+    // => assign all to 1 apart from last ace
+    if(hand.filter(h => h == 11).length > 1) {
+      for (i <- 0 until hand.filter(h => h == 11).length - 1) {
+        hand(hand.indexWhere(_ == 11)) = 1
+      }
+    }
     if (isBust(optimisticF(hand))) return pessimisticF(hand)
 
     return optimisticF(hand)
