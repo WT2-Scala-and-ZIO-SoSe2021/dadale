@@ -9,4 +9,13 @@ class Testing extends AnyFlatSpec {
     val test = "Test"
     assert(test.equals("Test"))
   }
+
+  "Main Functions" should "work" in {
+    val tester = Main;
+    val arr = Array(2, 5, 7, 1);
+
+    assert(tester.max(arr) == 7)
+    assert(tester.min(arr) == 1)
+    assert(tester.sum(arr) == 15)
+  }
 }
