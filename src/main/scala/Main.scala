@@ -1,10 +1,10 @@
 import scala.annotation.switch
 object Main extends App {
-  def max(arr: Array[Int]): Int = arr.reduce((x, y) => x max y)
+  def max(arr: Array[Int]): Int = arr.reduce(_ max _)
 
-  def min(arr: Array[Int]): Int = arr.reduce((x, y) => x min y)
+  def min(arr: Array[Int]): Int = arr.reduce(_ min _)
 
-  def sum(arr: Array[Int]): Int = arr.reduce((x, y) => x + y)
+  def sum(arr: Array[Int]): Int = arr.reduce(_ + _)
 
   def parse(card: String): Int = {
     card match {
@@ -23,13 +23,11 @@ object Main extends App {
     }
   }
 
-  def determineHandValue(strategy: Array[Int] => Int)(hand: Array[Int]): Int = {
-    return sum(hand.map(h => values(h)).map(h => strategy(h)))
-  }
+  def determineHandValue(strategy: Array[Int] => Int)(hand: Array[Int]): Int = 
+    sum(hand.map(h => values(h)).map(h => strategy(h)))
+  
 
-  def isBust(value: Int): Boolean = {
-    return value > 21
-  }
+  def isBust(value: Int): Boolean = value > 21
 
   def optimisticF = determineHandValue(max) _
   
@@ -37,14 +35,13 @@ object Main extends App {
 
   def determineBestHandValue(hand: Array[Int]): Int = {
     // Aces won't ever be counted as 11 more than once 
-    // => assign all to 1 apart from last ace
-    if(hand.filter(h => h == 11).length > 1) {
-      for (i <- 0 until hand.filter(h => h == 11).length - 1) {
-        hand(hand.indexWhere(_ == 11)) = 1
-      }
-    }
-    if (isBust(optimisticF(hand))) return pessimisticF(hand)
+    // => assign all to 1 apart from first ace
+    val replacedHand = hand.map(h => if (h == 11) 1 else h)
+    val firstAceIdx = replacedHand.indexOf(1)
+    if (firstAceIdx != -1) replacedHand(firstAceIdx) = 11
 
-    return optimisticF(hand)
+    val optimisticValue = optimisticF(replacedHand)
+
+    if (isBust(optimisticValue)) pessimisticF(replacedHand) else optimisticValue
   }
 }

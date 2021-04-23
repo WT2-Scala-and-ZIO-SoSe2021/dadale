@@ -1,65 +1,101 @@
-import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.funspec.AnyFunSpec;
 
-class Testing extends AnyFlatSpec {
-  val tester = Main;
-
-  "Int Array Functions" should "work" in {
-    val arr = Array(2, 5, 7, 1);
-
-    assert(tester.max(arr) == 7)
-    assert(tester.min(arr) == 1)
-    assert(tester.sum(arr) == 15)
+class Exercise1Spec extends AnyFunSpec {
+  val exercise1 = Main;
+  describe("max") {
+    it("should return the max value") {
+      assert(exercise1.max(Array(12, 23, 3434, 23)).equals(3434))
+    }
   }
 
-  "Parse Functions" should "work" in {
-    val cards = Array("2", "5", "7", "A", "K")
-
-    assert(tester.parse("5") == 5)
-    assert(tester.parse("A") == 11)
-    assert(tester.parse("Q") == 10)
-
-    val parsedCards = tester.parseAll(cards)
-    assert(parsedCards(0) == 2)
-    assert(parsedCards(3) == 11)
+  describe("min") {
+    it("should return the min value") {
+      assert(exercise1.min(Array(12, 23, 3434, 23)).equals(12))
+    }
   }
 
-  "Values Function" should "work" in {
-    assert(tester.values(4)(0) == 4 && tester.values(4).length == 1)
-    assert(tester.values(11)(0) == 1 && tester.values(11)(1) == 11 && tester.values(11).length == 2)
+  describe("sum") {
+    it("should return the sum") {
+      assert(exercise1.sum(Array(1, 2, 3)).equals(6))
+    }
   }
 
-  "Hand Value Functions" should "work" in {
-    def strategy(arr: Array[Int]): Int = arr(0)
-    val hand = Array(2, 11)
-    val hand2 = Array(2, 5)
+  describe("parse") {
+    it("should parse a picture card") {
+      assert(exercise1.parse("Q").equals(10))
+    }
 
-    val handVal = tester.determineHandValue(strategy)_
-    assert(handVal(hand) == 3)
-    assert(handVal(hand2) == 7)
+    it("should parse a number card") {
+      assert(exercise1.parse("7").equals(7))
+    }
 
-    assert(tester.isBust(12) == false)
-    assert((tester.isBust(23) == true))
+    it("should parse ace card") {
+      assert(exercise1.parse("A").equals(11))
+    }
+
+    it("should parse multiple cards") {
+      assert(
+        exercise1.parseAll(Array("A", "7", "K")).sameElements(Array(11, 7, 10))
+      )
+    }
   }
 
-  "Opt & Pess Functions" should "work" in {
-    val hand = Array(2, 11)
+  describe("values") {
+    it("should replace ace values with both possible values") {
+      assert(exercise1.values(11).sameElements(Array(1, 11)))
+    }
 
-    assert(tester.optimisticF(hand) == 13)
-    assert(tester.pessimisticF(hand) == 3)
+    it("should keep value for different values than ace") {
+      assert(exercise1.values(2).sameElements(Array(2)))
+      assert(exercise1.values(10).sameElements(Array(10)))
+    }
   }
 
-  "Best Hand Function" should "work" in {
-    val hand1 = Array(10, 11)
-    val hand2 = Array(10, 2, 11)
+  describe("isBust") {
+    it("should return false for values lower or equal 21") {
+      assert(exercise1.isBust(10) == false)
+      assert(exercise1.isBust(21) == false)
+    }
 
-    assert(tester.determineBestHandValue(hand1) == 21)
-    assert(tester.determineBestHandValue(hand2) == 13)
-
-    // Bonus task test cases
-    val hand3 = Array(9, 11, 11)
-    val hand4 = Array(11, 11, 11)
-
-    assert(tester.determineBestHandValue(hand3) == 21)
-    assert(tester.determineBestHandValue(hand4) == 13)
+    it("should return true for values greater than 21") {
+      assert(exercise1.isBust(22) == true)
+    }
   }
+
+  describe("determineHandValue") {
+    it("should calculate correctly using an optimistic strategy") {
+      assert(exercise1.optimisticF(Array(11,3,6,2)) == 22)
+    }
+
+    it("should calculate correctly using a pessimistic strategy") {
+      assert(exercise1.pessimisticF(Array(11,3,6,2)) == 12)
+    }
+  }
+
+  describe("simpleDetermineBestHandValue") {
+    it("should choose the optimistic strategy if value is not busted") {
+      assert(exercise1.determineBestHandValue(Array(11,3,6)) == 20)
+    }
+
+    it("should choose the pessimistic strategy if value is busted") {
+      assert(exercise1.determineBestHandValue(Array(11,3,6,2)) == 12)
+    }
+  }
+
+  describe("determineBestHandValue") {
+    it("should choose the optimistic strategy if value is not busted") {
+      assert(exercise1.determineBestHandValue(Array(11,3,6)) == 20)
+    }
+
+    it("should choose the pessimistic strategy if value is busted") {
+      assert(exercise1.determineBestHandValue(Array(11,3,6,2)) == 12)
+    }
+
+    it("should pick the right values if multiple aces are provided") {
+      assert(exercise1.determineBestHandValue(Array(2,3)) == 5)
+      assert(exercise1.determineBestHandValue(Array(11,11,9)) == 21)
+      assert(exercise1.determineBestHandValue(Array(11,11,11,8)) == 21)
+    }
+  }
+
 }
