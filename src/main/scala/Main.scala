@@ -1,3 +1,4 @@
+import scala.annotation.switch
 object Main extends App {
-  println("It worked! :)")
+  println("...")
 }

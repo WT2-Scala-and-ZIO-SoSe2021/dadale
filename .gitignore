@@ -9,6 +9,8 @@ dist/*
 target/
 project/boot/
 project/plugins/project/
+.bsp/*
+
 
 # Intellij specific
 .idea
@@ -20,3 +22,5 @@ project/plugins/project/
 **/.bloop
 .metals/
 metals.sbt
+.scalafmt.conf
+
