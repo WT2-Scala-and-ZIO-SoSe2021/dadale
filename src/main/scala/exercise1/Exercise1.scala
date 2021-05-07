@@ -1,3 +1,5 @@
+package exercise1
+
 object Exercise1 {
   def max(arr: Array[Int]): Int = arr.reduce(_ max _)
 

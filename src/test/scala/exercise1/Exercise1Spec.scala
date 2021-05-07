@@ -1,4 +1,5 @@
 import org.scalatest.funspec.AnyFunSpec;
+import exercise1.Exercise1;
 
 class Exercise1Spec extends AnyFunSpec {
   describe("max") {
