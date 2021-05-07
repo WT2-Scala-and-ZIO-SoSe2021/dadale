@@ -4,11 +4,12 @@ sealed trait Ior[A] {
 
   def flatMap[B](f: A => Ior[B]): Ior[B] = this match {
     case Right(elem) => f(elem)
-    case Both(left, elem) => f(elem) match {
-      case Right(elem) => Both(left, elem)
-      case Both(left, elem) => Both(left, elem)
-      case Left(elem) => Left(elem)
-    }
+    case Both(left, elem) =>
+      f(elem) match {
+        case Right(elem)      => Both(left, elem)
+        case Both(left, elem) => Both(left, elem)
+        case Left(elem)       => Left(elem)
+      }
     case Left(elem) => Left(elem)
   }
   def map[B](f: A => B): Ior[B] = flatMap((a: A) => Ior.unit(f(a)))

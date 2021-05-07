@@ -1,5 +1,6 @@
+package exercise1
+
 import org.scalatest.funspec.AnyFunSpec;
-import exercise1.Exercise1;
 
 class Exercise1Spec extends AnyFunSpec {
   describe("max") {
@@ -64,37 +65,37 @@ class Exercise1Spec extends AnyFunSpec {
 
   describe("determineHandValue") {
     it("should calculate correctly using an optimistic strategy") {
-      assert(Exercise1.optimisticF(Array(11,3,6,2)) == 22)
+      assert(Exercise1.optimisticF(Array(11, 3, 6, 2)) == 22)
     }
 
     it("should calculate correctly using a pessimistic strategy") {
-      assert(Exercise1.pessimisticF(Array(11,3,6,2)) == 12)
+      assert(Exercise1.pessimisticF(Array(11, 3, 6, 2)) == 12)
     }
   }
 
   describe("simpleDetermineBestHandValue") {
     it("should choose the optimistic strategy if value is not busted") {
-      assert(Exercise1.determineBestHandValue(Array(11,3,6)) == 20)
+      assert(Exercise1.determineBestHandValue(Array(11, 3, 6)) == 20)
     }
 
     it("should choose the pessimistic strategy if value is busted") {
-      assert(Exercise1.determineBestHandValue(Array(11,3,6,2)) == 12)
+      assert(Exercise1.determineBestHandValue(Array(11, 3, 6, 2)) == 12)
     }
   }
 
   describe("determineBestHandValue") {
     it("should choose the optimistic strategy if value is not busted") {
-      assert(Exercise1.determineBestHandValue(Array(11,3,6)) == 20)
+      assert(Exercise1.determineBestHandValue(Array(11, 3, 6)) == 20)
     }
 
     it("should choose the pessimistic strategy if value is busted") {
-      assert(Exercise1.determineBestHandValue(Array(11,3,6,2)) == 12)
+      assert(Exercise1.determineBestHandValue(Array(11, 3, 6, 2)) == 12)
     }
 
     it("should pick the right values if multiple aces are provided") {
-      assert(Exercise1.determineBestHandValue(Array(2,3)) == 5)
-      assert(Exercise1.determineBestHandValue(Array(11,11,9)) == 21)
-      assert(Exercise1.determineBestHandValue(Array(11,11,11,8)) == 21)
+      assert(Exercise1.determineBestHandValue(Array(2, 3)) == 5)
+      assert(Exercise1.determineBestHandValue(Array(11, 11, 9)) == 21)
+      assert(Exercise1.determineBestHandValue(Array(11, 11, 11, 8)) == 21)
     }
   }
 }
