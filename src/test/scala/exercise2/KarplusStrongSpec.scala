@@ -7,7 +7,7 @@ import org.scalatest.funspec.AnyFunSpec
 class KarplusStrongSpec extends AnyFunSpec {
   describe("play music") {
     it("...") {
-      new KarplusStrong().playMusic()
+      new KarplusStrong().whiteNoise()
     }
   } 
 }
