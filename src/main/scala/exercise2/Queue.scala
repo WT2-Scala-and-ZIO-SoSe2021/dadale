@@ -13,8 +13,8 @@ trait QueueLike[T] {
 }
 
 class Queue[T](
-    val in: Option[StackLike[T]] = Option(new Stack[T](None, None)),
-    val out: Option[StackLike[T]] = Option(new Stack[T](None, None))
+    val in: Option[StackLike[T]] = Option(new Stack[T]()),
+    val out: Option[StackLike[T]] = Option(new Stack[T]())
 ) extends QueueLike[T] {
 
   def enqueue(elem: T): QueueLike[T] = if (isEmpty)
@@ -24,7 +24,7 @@ class Queue[T](
   def dequeue(): Try[QueueLike[T]] = {
     if (isEmpty) throw new Throwable("Queue is empty")
     if (out.get.pop.get.isEmpty)
-      Try(new Queue(Option(new Stack[T](None, None)), Option(in.get.reverse)))
+      Try(new Queue(Option(new Stack[T]()), Option(in.get.reverse)))
     else Try(new Queue(in, Option(out.get.pop.get)))
   }
 

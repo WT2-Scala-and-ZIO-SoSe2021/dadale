@@ -28,12 +28,10 @@ object KarplusStrong {
       .asInstanceOf[Queue[Double]]
   }
 
-  // TODO: is this really tail recursive?
   @tailrec
   def loop(f: Double => Unit)(queue: Queue[Double]): Unit = {
     val updatedQueue = update(queue)
     f(updatedQueue.front.get)
     loop(f)(updatedQueue)
   }
-
 }

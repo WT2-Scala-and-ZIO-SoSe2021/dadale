@@ -14,10 +14,10 @@ trait StackLike[T] {
   def reverse: StackLike[T]
 }
 
-class Stack[T](val tail: Option[Stack[T]], val elem: Option[T])
+class Stack[T](val elem: Option[T] = None, val tail: Option[Stack[T]] = None)
     extends StackLike[T] {
 
-  def push(elem: T): StackLike[T] = new Stack(Option(this), Option(elem))
+  def push(elem: T): StackLike[T] = new Stack(Option(elem), Option(this))
 
   def pop(): Try[StackLike[T]] = if (isEmpty)
     throw new Throwable("Stack is empty")
@@ -27,8 +27,8 @@ class Stack[T](val tail: Option[Stack[T]], val elem: Option[T])
 
   def isEmpty: Boolean = tail.isEmpty && elem.isEmpty
 
-  def reverse: StackLike[T] = if (tail.isEmpty) new Stack[T](None, elem)
-  else tail.get.reverseHelper(new Stack(None, elem))
+  def reverse: StackLike[T] = if (tail.isEmpty) new Stack[T](elem, None)
+  else tail.get.reverseHelper(new Stack(elem, None))
 
   def reverseHelper(stack: StackLike[T]): StackLike[T] = if (isEmpty) stack
   else if (tail.isEmpty) stack.push(elem.get)
