@@ -27,11 +27,15 @@ class Stack[T](val elem: Option[T] = None, val tail: Option[Stack[T]] = None)
 
   def isEmpty: Boolean = tail.isEmpty && elem.isEmpty
 
-  def reverse: StackLike[T] = if (tail.isEmpty) new Stack[T](elem, None)
-  else tail.get.reverseHelper(new Stack(elem, None))
+  def reverse: StackLike[T] = tail match {
+    case Some(t) => t.reverseHelper(new Stack(elem, None))
+    case _       => new Stack[T](elem, None)
+  }
 
   def reverseHelper(stack: StackLike[T]): StackLike[T] = if (isEmpty) stack
-  else if (tail.isEmpty) stack.push(elem.get)
   else
-    tail.get.reverseHelper(stack.push(elem.get))
+    tail match {
+      case Some(t) => t.reverseHelper(stack.push(elem.get))
+      case _       => stack.push(elem.get)
+    }
 }
