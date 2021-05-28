@@ -1,6 +1,7 @@
 package exercise2
 
 import scala.util.Try
+import scala.util.Failure
 
 trait StackLike[T] {
   def push(elem: T): StackLike[T]
@@ -20,16 +21,16 @@ class Stack[T](val elem: Option[T] = None, val tail: Option[Stack[T]] = None)
   def push(elem: T): StackLike[T] = new Stack(Option(elem), Option(this))
 
   def pop(): Try[StackLike[T]] = if (isEmpty)
-    throw new Throwable("Stack is empty")
+    new Failure(new Throwable("Stack is empty"))
   else Try(tail.getOrElse(new Stack[T](None, None)))
 
   def top(): Option[T] = elem
 
-  def isEmpty: Boolean = tail.isEmpty && elem.isEmpty
+  def isEmpty: Boolean = elem.isEmpty
 
   def reverse: StackLike[T] = tail match {
     case Some(t) => t.reverseHelper(new Stack(elem, None))
-    case _       => new Stack[T](elem, None)
+    case _       => new Stack(elem, None)
   }
 
   def reverseHelper(stack: StackLike[T]): StackLike[T] = if (isEmpty) stack

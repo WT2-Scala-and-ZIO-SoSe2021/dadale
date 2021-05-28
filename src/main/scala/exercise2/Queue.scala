@@ -1,6 +1,8 @@
 package exercise2
 
 import scala.util.Try
+import scala.util.Failure
+import scala.util.Success
 
 trait QueueLike[T] {
   def enqueue(elem: T): QueueLike[T]
@@ -17,14 +19,17 @@ class Queue[T](
     val out: StackLike[T] = new Stack[T]()
 ) extends QueueLike[T] {
 
-  def enqueue(elem: T): QueueLike[T] = if (isEmpty)
+
+  def this(in: StackLike[T]) = this(new Stack[T](), in.reverse)
+
+  def enqueue(elem: T): Queue[T] = if (isEmpty)
     new Queue(in, out.push(elem))
   else new Queue(in.push(elem), out)
 
-  def dequeue(): Try[QueueLike[T]] = {
-    if (isEmpty) throw new Throwable("Queue is empty")
-    if (out.pop.get.isEmpty)
-      Try(new Queue(new Stack[T](), in.reverse))
+  def dequeue(): Try[Queue[T]] = {
+    if (isEmpty) new Failure(new Throwable("Queue is empty"))
+    else if (out.pop.get.isEmpty)
+      Try(new Queue(in))
     else Try(new Queue(in, out.pop.get))
   }
 

@@ -1,6 +1,8 @@
 package exercise2
 
 import org.scalatest.funspec.AnyFunSpec
+import scala.util.Failure
+import scala.util.Success
 
 class QueueSpec extends AnyFunSpec {
   describe("front") {
@@ -23,10 +25,11 @@ class QueueSpec extends AnyFunSpec {
 
     it("dequeue on empty queue throws exception") {
       val a = new Queue[Int]()
-      val caught = intercept[Throwable] {
-        val b = a.dequeue.get
+
+      a.dequeue match {
+        case Success(i) => assert(false)
+        case Failure(s) => assert(true)
       }
-      assert(caught.getMessage == "Queue is empty")
     }
   }
 

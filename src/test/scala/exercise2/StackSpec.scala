@@ -1,6 +1,9 @@
 package exercise2
 
 import org.scalatest.funspec.AnyFunSpec
+import scala.util.Failure
+import scala.util.Success
+
 
 class StackSpec extends AnyFunSpec {
   describe("top") {
@@ -28,10 +31,11 @@ class StackSpec extends AnyFunSpec {
 
     it("throws exception on empty stack") {
       val a = new Stack[Int](None, None)
-      val caught = intercept[Throwable] {
-        val b = a.pop
+
+      a.pop match {
+        case Success(i) => assert(false)
+        case Failure(s) => assert(true)
       }
-      assert(caught.getMessage == "Stack is empty")
     }
   }
 
