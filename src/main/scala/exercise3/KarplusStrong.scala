@@ -12,14 +12,19 @@ import zio.random._
 object KarplusStrong extends App {
 
   def run(args: List[String]) =
-    loop(whiteNoise()).exitCode
+    (for {
+      noise <- whiteNoise()
+    } yield loop(noise)).exitCode
 
   def play(sample: Double): UIO[Unit] = {
     println("in play")
     ZIO.effectTotal(StdAudio.play(sample))
   }
 
-  def whiteNoise(frequency: Int = 440, volume: Double = 1.0): URIO[Random, Queue[Double]] = {
+  def whiteNoise(
+      frequency: Int = 440,
+      volume: Double = 1.0
+  ): URIO[Random, Queue[Double]] = {
     println("white noise")
     if (frequency <= 0 && volume < 0.0 && volume > 1.0)
       throw new Throwable("Incorrect parameters")
@@ -27,45 +32,29 @@ object KarplusStrong extends App {
     ZIO.foldLeft(0 to frequency)(new Queue[Double]()) { (acc, _) =>
       for {
         randomValue <- nextDoubleBetween(-0.5, 0.5)
-      } yield acc.enqueue(randomValue * volume)
+        queue <- ZIO.effectTotal(acc.enqueue(randomValue * volume))
+      } yield queue
     }
   }
 
   def update(queue: Queue[Double]): Option[Queue[Double]] = {
     println(s"in update $queue")
     val decay = 0.996
-    
+
     queue.dequeue match {
-      case Success(newQueue) => Some(newQueue.enqueue((newQueue.front.get + queue.front.get) / 2 * decay))
-      case Failure (_) => None
+      case Success(newQueue) =>
+        Some(
+          newQueue.enqueue((newQueue.front.get + queue.front.get) / 2 * decay)
+        )
+      case Failure(_) => None
     }
   }
 
-  @tailrec
-  def loop(queue: URIO[Random, Queue[Double]]): ZIO[Random, Throwable, Unit] = {
-    println(s"in loop $queue")
-    // for {
-    //   q <- queue
-    //   something <- update(q)
-    //   d <- something
-    //   _ <- play(d.front.get)
-    // } yield ()
-
-    val updatedQueue = for {
-      q <- queue
-    } yield {
-      putStr(s"queue $q")
-      update(q).get
-    }
-
-    println(s"after update ${updatedQueue}")
-
+  def loop(queue: Queue[Double]): ZIO[Random, Throwable, Unit] = {
+    val updatedQueue = update(queue).get
     for {
-      d <- updatedQueue
-    } yield play(d.front.get)
-
-    println("after play")
-    
-    loop(updatedQueue)
+      _ <- play(updatedQueue.front.get)
+      _ <- loop(updatedQueue)
+    } yield ()
   }
 }
