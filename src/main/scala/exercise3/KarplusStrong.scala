@@ -14,18 +14,15 @@ object KarplusStrong extends App {
   def run(args: List[String]) =
     (for {
       noise <- whiteNoise()
-    } yield loop(noise)).exitCode
+      _ <- loop(noise)
+    } yield ()).exitCode
 
-  def play(sample: Double): UIO[Unit] = {
-    println("in play")
-    ZIO.effectTotal(StdAudio.play(sample))
-  }
+  def play(sample: Double): UIO[Unit] = ZIO.effectTotal(StdAudio.play(sample))
 
   def whiteNoise(
       frequency: Int = 440,
       volume: Double = 1.0
   ): URIO[Random, Queue[Double]] = {
-    println("white noise")
     if (frequency <= 0 && volume < 0.0 && volume > 1.0)
       throw new Throwable("Incorrect parameters")
 
@@ -38,7 +35,6 @@ object KarplusStrong extends App {
   }
 
   def update(queue: Queue[Double]): Option[Queue[Double]] = {
-    println(s"in update $queue")
     val decay = 0.996
 
     queue.dequeue match {
