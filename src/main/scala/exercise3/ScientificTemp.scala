@@ -1,6 +1,6 @@
 package exercise3
 
-import temperature.temperature._
+import temperature._
 
 class ScientificTemp {
     implicit val locale: Locale.Locale = Locale.SCI

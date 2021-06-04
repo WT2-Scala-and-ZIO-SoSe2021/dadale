@@ -1,8 +1,7 @@
-package temperature
+package exercise3
 
 import org.scalatest.funspec.AnyFunSpec
 import temperature._
-import exercise3.ScientificTemp
 
 class packageSpec extends AnyFunSpec {
   describe("The Temperature package") {

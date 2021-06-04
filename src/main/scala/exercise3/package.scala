@@ -1,4 +1,4 @@
-package temperature
+package exercise3
 
 package object temperature {
   type Temperature = Double
@@ -13,9 +13,10 @@ package object temperature {
   implicit val locale: Locale.Locale = Locale.Other
 
   def display(temp: Temperature)(implicit locale: Locale.Locale) = locale match {
-    case "US" => s"${temp} °F"
-    case "SCI" => s"${temp} °K"
-    case "Other" => s"${temp} °C"
+    case Locale.US => s"${temp} °F"
+    case Locale.SCI => s"${temp} °K"
+    case Locale.Other => s"${temp} °C"
+    case _ => "Locale can only be one of [US | SCI | Other]"
   }
 
   implicit class TemperatureClass(temp: Temperature) {
