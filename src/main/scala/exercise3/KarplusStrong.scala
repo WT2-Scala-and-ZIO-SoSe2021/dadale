@@ -1,5 +1,6 @@
-import zio.console._
+package exercise3
 
+import zio.console._
 import exercise2._
 import scala.util.Success
 import scala.util.Failure
@@ -8,14 +9,18 @@ import exercise2.lib.StdAudio
 import zio.{IO, UIO, URIO, ZIO, App}
 import zio.random._
 
-object MyApp extends App {
+object KarplusStrong extends App {
 
   def run(args: List[String]) =
-    loop(whiteNoise()).run
+    loop(whiteNoise()).exitCode
 
-  def play(sample: Double): UIO[Unit] = ZIO.effectTotal(StdAudio.play(sample))
+  def play(sample: Double): UIO[Unit] = {
+    println("in play")
+    ZIO.effectTotal(StdAudio.play(sample))
+  }
 
   def whiteNoise(frequency: Int = 440, volume: Double = 1.0): URIO[Random, Queue[Double]] = {
+    println("white noise")
     if (frequency <= 0 && volume < 0.0 && volume > 1.0)
       throw new Throwable("Incorrect parameters")
 
@@ -27,6 +32,7 @@ object MyApp extends App {
   }
 
   def update(queue: Queue[Double]): Option[Queue[Double]] = {
+    println(s"in update $queue")
     val decay = 0.996
     
     queue.dequeue match {
@@ -36,9 +42,30 @@ object MyApp extends App {
   }
 
   @tailrec
-  def loop(queue: Queue[Double]): ZIO[Random, Throwable, Unit] = {
-    val updatedQueue = update(queue).get
-    play(updatedQueue.front.get)
+  def loop(queue: URIO[Random, Queue[Double]]): ZIO[Random, Throwable, Unit] = {
+    println(s"in loop $queue")
+    // for {
+    //   q <- queue
+    //   something <- update(q)
+    //   d <- something
+    //   _ <- play(d.front.get)
+    // } yield ()
+
+    val updatedQueue = for {
+      q <- queue
+    } yield {
+      putStr(s"queue $q")
+      update(q).get
+    }
+
+    println(s"after update ${updatedQueue}")
+
+    for {
+      d <- updatedQueue
+    } yield play(d.front.get)
+
+    println("after play")
+    
     loop(updatedQueue)
   }
 }
