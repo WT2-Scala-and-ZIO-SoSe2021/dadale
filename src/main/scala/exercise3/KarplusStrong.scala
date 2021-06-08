@@ -1,12 +1,10 @@
 package exercise3
 
-import zio.console._
 import exercise2._
 import scala.util.Success
 import scala.util.Failure
-import scala.annotation.tailrec
 import exercise2.lib.StdAudio
-import zio.{IO, UIO, URIO, ZIO, App}
+import zio.{UIO, URIO, ZIO, App}
 import zio.random._
 
 object KarplusStrong extends App {
@@ -14,10 +12,10 @@ object KarplusStrong extends App {
   def run(args: List[String]) =
     (for {
       noise <- whiteNoise()
-    } yield loop(noise)).exitCode
+      _ <- loop(noise)
+    } yield ()).exitCode
 
   def play(sample: Double): UIO[Unit] = {
-    println("in play")
     ZIO.effectTotal(StdAudio.play(sample))
   }
 
@@ -25,7 +23,6 @@ object KarplusStrong extends App {
       frequency: Int = 440,
       volume: Double = 1.0
   ): URIO[Random, Queue[Double]] = {
-    println("white noise")
     if (frequency <= 0 && volume < 0.0 && volume > 1.0)
       throw new Throwable("Incorrect parameters")
 
@@ -38,7 +35,6 @@ object KarplusStrong extends App {
   }
 
   def update(queue: Queue[Double]): Option[Queue[Double]] = {
-    println(s"in update $queue")
     val decay = 0.996
 
     queue.dequeue match {
