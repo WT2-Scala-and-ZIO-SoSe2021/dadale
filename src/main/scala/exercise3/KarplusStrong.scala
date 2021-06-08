@@ -15,9 +15,7 @@ object KarplusStrong extends App {
       _ <- loop(noise)
     } yield ()).exitCode
 
-  def play(sample: Double): UIO[Unit] = {
-    ZIO.effectTotal(StdAudio.play(sample))
-  }
+  def play(sample: Double): UIO[Unit] = ZIO.effectTotal(StdAudio.play(sample))
 
   def whiteNoise(
       frequency: Int = 440,
