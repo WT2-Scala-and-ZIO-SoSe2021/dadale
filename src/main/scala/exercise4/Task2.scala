@@ -10,6 +10,7 @@ object Task2 extends zio.App {
       .fail("Error")).fork
     _ <- fib.join
   } yield ()).exitCode
+  
 }
 
 // ╥
