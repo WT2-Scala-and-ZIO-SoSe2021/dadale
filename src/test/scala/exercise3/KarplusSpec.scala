@@ -14,20 +14,30 @@ object KarplusSpec extends DefaultRunnableSpec {
         queue <- whiteNoise()
       } yield assert(queue.isEmpty)(equalTo(false))
     },
-
     testM("Queue-Element is instance of Some") {
       for {
         queue <- whiteNoise()
-      } yield  assert(queue.front()) (isSome)
+      } yield assert(queue.front())(isSome)
     },
-
     testM("Queue value should be between -0.5 and 0.5") {
       val randomDoubles = List(0.5, 0.2, 0.3)
       val expectedRandoms = List(0.25, 0.1, 0.15)
       for {
-        _  <- TestRandom.feedDoubles(randomDoubles(0), randomDoubles(1), randomDoubles(2))
+        _ <- TestRandom.feedDoubles(
+          randomDoubles(0),
+          randomDoubles(1),
+          randomDoubles(2)
+        )
         queue <- whiteNoise(3, 0.5)
-      } yield assert(expectedRandoms)(equalTo(List(queue.front().get, queue.dequeue().get.front().get, queue.dequeue().get.dequeue().get.front().get)))
+      } yield assert(expectedRandoms)(
+        equalTo(
+          List(
+            queue.front().get,
+            queue.dequeue().get.front().get,
+            queue.dequeue().get.dequeue().get.front().get
+          )
+        )
+      )
     }
 
     // To test exceptions in the whiteNoise function, it should return: ZIO[Random, IllegalArgumentException, Queue[Double]]
@@ -37,7 +47,6 @@ object KarplusSpec extends DefaultRunnableSpec {
     //            res <- ZIO.succeed(throw new IllegalArgumentException("unexpected error")).run
     //          } yield assert(res)(dies(isSubtype[IllegalArgumentException](anything)))
     //        }
-
   )
 
 }

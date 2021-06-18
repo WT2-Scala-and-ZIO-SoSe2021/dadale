@@ -20,9 +20,9 @@ object KarplusStrong extends App {
   def whiteNoise(
       frequency: Int = 440,
       volume: Double = 1.0
-  ): URIO[Random, Queue[Double]] = {
-    if (frequency <= 0 && volume < 0.0 && volume > 1.0)
-      throw new Throwable("Incorrect parameters")
+  ): ZIO[Random, Throwable, Queue[Double]] = {
+    if (frequency <= 0 || volume < 0.0 || volume > 1.0)
+      return ZIO.fail(new Throwable("Incorrect parameters"))
 
     ZIO.foldLeft(0 to frequency)(new Queue[Double]()) { (acc, _) =>
       for {
@@ -35,13 +35,12 @@ object KarplusStrong extends App {
   def update(queue: Queue[Double]): Option[Queue[Double]] = {
     val decay = 0.996
 
-    queue.dequeue match {
-      case Success(newQueue) =>
-        Some(
-          newQueue.enqueue((newQueue.front.get + queue.front.get) / 2 * decay)
-        )
-      case Failure(_) => None
-    }
+    queue
+      .dequeue()
+      .map(newQueue =>
+        newQueue.enqueue((newQueue.front.get + queue.front.get) / 2 * decay)
+      )
+      .toOption
   }
 
   def loop(queue: Queue[Double]): ZIO[Random, Throwable, Unit] = {
