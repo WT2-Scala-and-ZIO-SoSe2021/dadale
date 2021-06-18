@@ -23,6 +23,9 @@ object Task2 extends zio.App {
 //   } yield ()).exitCode
 // }
 
+  // FRAGEN
+  // - Wie interruptet man das?
+
   override def run(args: List[String]): URIO[zio.ZEnv, ExitCode] =(for {
     fib <- (ZIO.fail("Error") zipPar ZIO.fail("Error")).ensuring(ZIO.die(new RuntimeException())).fork
     _ <- fib.await
