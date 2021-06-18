@@ -23,9 +23,9 @@ package object temperature {
     val freezingPoint = 0.0
     val absoluteZero = -273.15
 
-    def celsius(): Temperature = temp
-    def kelvin(): Temperature = temp - 273.15 
-    def fahrenheit(): Temperature = (temp - 32) * 5/9
+    def celsius: Temperature = temp
+    def kelvin: Temperature = temp - 273.15 
+    def fahrenheit: Temperature = (temp - 32) * 5/9
 
     def avg(other: Temperature): Temperature = (temp + other) / 2
   }
