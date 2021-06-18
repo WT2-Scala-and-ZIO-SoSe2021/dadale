@@ -5,7 +5,9 @@ import zio.console._
 object Task2 extends zio.App {
 
   val program = for {
-    fib <- (ZIO.fail("Error") zipPar ZIO.fail("Error")).ensuring(ZIO.die(new RuntimeException())).fork
+    fib <- (ZIO.fail("Error") zipPar ZIO.fail("Error"))
+      .ensuring(ZIO.die(new RuntimeException()))
+      .fork
     _ <- fib.await
   } yield ()
 
@@ -15,7 +17,6 @@ object Task2 extends zio.App {
 //     _ <- fib.await
 //   } yield ()
 
-
 //   override def run(args: List[String]): URIO[zio.ZEnv, ExitCode] = (for {
 //     fib <- (ZIO.fail("Error") zipPar ZIO
 //       .succeed()).ensuring(ZIO.die(new RuntimeException())).fork
@@ -23,11 +24,12 @@ object Task2 extends zio.App {
 //   } yield ()).exitCode
 // }
 
-  // FRAGEN
+  // TODO
   // - Wie interruptet man das?
 
-  override def run(args: List[String]): URIO[zio.ZEnv, ExitCode] =(for {
-    fib <- (ZIO.fail("Error") zipPar ZIO.fail("Error")).ensuring(ZIO.die(new RuntimeException())).fork
+  override def run(args: List[String]): URIO[zio.ZEnv, ExitCode] = (for {
+    fib <- (ZIO.fail("Error") zipPar ZIO
+      .fail("Error")).ensuring(ZIO.die(new RuntimeException())).fork
     _ <- fib.await
   } yield ()).exitCode
 }
