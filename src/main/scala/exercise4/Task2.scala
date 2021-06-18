@@ -3,34 +3,12 @@ import zio._
 import zio.console._
 
 object Task2 extends zio.App {
-
-  val program = for {
-    fib <- (ZIO.fail("Error") zipPar ZIO.fail("Error"))
-      .ensuring(ZIO.die(new RuntimeException()))
-      .fork
-    _ <- fib.await
-  } yield ()
-
-//   for {
-//     fib <- ZIO.fail("an error").ensuring(ZIO.interrupt).fork
-//     _ <- fib.interrupt.ensuring(ZIO.die(new RuntimeException()))
-//     _ <- fib.await
-//   } yield ()
-
-//   override def run(args: List[String]): URIO[zio.ZEnv, ExitCode] = (for {
-//     fib <- (ZIO.fail("Error") zipPar ZIO
-//       .succeed()).ensuring(ZIO.die(new RuntimeException())).fork
-//     _ <- fib.await
-//   } yield ()).exitCode
-// }
-
-  // TODO
-  // - Wie interruptet man das?
+  // TODO empty trace und Ende falsch
 
   override def run(args: List[String]): URIO[zio.ZEnv, ExitCode] = (for {
-    fib <- (ZIO.fail("Error") zipPar ZIO
-      .fail("Error")).ensuring(ZIO.die(new RuntimeException())).fork
-    _ <- fib.await
+    fib <- (ZIO.interrupt zipPar ZIO
+      .fail("Error")).fork
+    _ <- fib.join
   } yield ()).exitCode
 }
 
