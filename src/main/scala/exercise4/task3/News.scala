@@ -18,10 +18,10 @@ case class NewsLive(queue: Queue[String]) extends News {
 }
 
 object News {
-  def submit(news: String): URIO[Has[News], Unit] =
+  def post(news: String): URIO[Has[News], Unit] =
     ZIO.serviceWith[News](_.post(news))
 
-  def take(): URIO[Has[News], String] =
+  def proclaim(): URIO[Has[News], String] =
     ZIO.serviceWith[News](_.proclaim())
 }
 

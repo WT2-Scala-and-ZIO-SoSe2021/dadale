@@ -10,6 +10,6 @@ class Elder(val name: String) extends Robot {
     */
   override def work(): ZIO[Has[JobBoard] with Clock, Nothing, Unit] =
     JobBoard.submit(
-      PendingJob(10.second)
+      PendingJob("Job name", 10.second) // TODO ask Anton about job name, maybe generate a random
     ) repeat Schedule.spaced(5.second).unit
 }
