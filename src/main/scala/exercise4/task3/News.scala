@@ -12,9 +12,7 @@ case class NewsLive(queue: Queue[String]) extends News {
 
   override def post(news: String): UIO[Unit] = queue.offer(news).unit
 
-  override def proclaim(): UIO[String] = for {
-    option <- queue.poll
-  } yield option.getOrElse("")
+  override def proclaim(): UIO[String] = queue.take
 }
 
 object News {

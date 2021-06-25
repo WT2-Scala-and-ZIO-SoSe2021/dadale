@@ -1,4 +1,3 @@
-// in file gardening/fruits/package.scala
 package exercise4
 
 import zio._
@@ -18,8 +17,9 @@ package object task3 {
     def work(): ZIO[MyEnv, Any, Unit]
   }
 
-  // TODO ask Anton if jobs have a name
-  sealed trait Job {val name: String}
+  sealed trait Job {
+    val name: String
+  }
 
   case class PendingJob(name: String, duration: zio.duration.Duration) extends Job
   case class CompletedJob(name: String, completedBy: Robot) extends Job

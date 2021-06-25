@@ -13,7 +13,7 @@ class Reporter(val name: String) extends Robot {
     * For simplicity, runs synchronously in the main fiber.
     */
   override def work(): ZIO[Has[News] with Clock with Console, Any, Unit] =
-    action repeat Schedule.forever.unit
+    action.forever
 
   val action = for {
     news <- News.proclaim()

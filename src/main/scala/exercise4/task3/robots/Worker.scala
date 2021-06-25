@@ -12,7 +12,7 @@ class Worker(val name: String) extends Robot {
     */
   override def work(): ZIO[Has[JobBoard] with Has[
     CompletedJobsHub
-  ] with Clock, Nothing, Unit] = action repeat Schedule.forever.unit
+  ] with Clock, Nothing, Unit] = action.forever
 
   val action = for {
     job <- JobBoard.take()

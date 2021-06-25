@@ -8,12 +8,12 @@ class Overseer(val name: String) extends Robot {
     * (including the name of the job and the robot who completed it)
     */
   override def work()
-      : ZIO[Has[CompletedJobsHub] with Has[News], Nothing, Unit] = ???      
-    // for {
-    //   dequeue <- { CompletedJobsHub.subscribe }
-    //   job <- dequeue.take
-    //   _ <- News.submit(s"${job.completedBy.name} completed ${job.name}")
-    // } yield ()
+      : ZIO[Has[CompletedJobsHub] with Has[News], Nothing, Unit] = CompletedJobsHub.subscribe.use { 
+    queue => (for {
+        job <- queue.take
+        _ <- News.post(s"${job.completedBy.name} completed ${job.name}")
+      } yield ()).forever
+    }
   
 }
 
