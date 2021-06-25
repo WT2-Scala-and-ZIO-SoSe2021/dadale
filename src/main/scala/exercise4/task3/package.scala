@@ -2,9 +2,13 @@
 package exercise4
 
 import zio._
+import zio.clock.Clock
 
 package object task3 {
-  type MyEnv = zio.ZEnv
+  type MyEnv = Has[CompletedJobsHub]
+    with Has[JobBoard]
+    with Has[News]
+    with Clock
 
   trait Robot {
     val name: String

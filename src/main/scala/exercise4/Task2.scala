@@ -3,7 +3,6 @@ import zio._
 import zio.console._
 
 object Task2 extends zio.App {
-  // TODO empty trace und Ende falsch
 
   override def run(args: List[String]): URIO[zio.ZEnv, ExitCode] = (for {
     fib <- (ZIO.interrupt zipPar ZIO
