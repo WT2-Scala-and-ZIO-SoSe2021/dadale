@@ -8,16 +8,11 @@ trait News {
   def proclaim(): UIO[String]
 }
 
-case class NewsLive() extends News {
-  val unboundedQueue: UIO[Queue[String]] = Queue.unbounded[String]
+case class NewsLive(queue: Queue[String]) extends News {
 
-  override def post(news: String): UIO[Unit] = for {
-    queue <- unboundedQueue
-    _ <- queue.offer(news)
-  } yield ()
+  override def post(news: String): UIO[Unit] = queue.offer(news).unit
 
   override def proclaim(): UIO[String] = for {
-    queue <- unboundedQueue
     option <- queue.poll
   } yield option.getOrElse("")
 }
@@ -31,5 +26,11 @@ object News {
 }
 
 object NewsLive {
-  val layer: ULayer[Has[News]] = ZLayer.succeed(NewsLive())
+  val layer: ULayer[Has[News]] = {
+    val news = for {
+      queue <- Queue.unbounded[String]
+      news = NewsLive(queue)
+    } yield news
+    ZLayer.fromEffect(news)
+  }
 }

@@ -13,18 +13,11 @@ trait JobBoard {
   def take(): UIO[PendingJob]
 }
 
-case class JobBoardLive() extends JobBoard {
-  val unboundedQueue: UIO[Queue[PendingJob]] = Queue.unbounded[PendingJob]
+case class JobBoardLive(queue: Queue[PendingJob]) extends JobBoard {
 
-  override def submit(job: PendingJob): UIO[Unit] = for {
-    queue <- unboundedQueue
-    _ <- queue.offer(job)
-  } yield ()
+  override def submit(job: PendingJob): UIO[Unit] = queue.offer(job).unit
 
-  override def take(): UIO[PendingJob] = for {
-    queue <- unboundedQueue
-    job <- queue.take
-  } yield job
+  override def take(): UIO[PendingJob] = queue.take
 }
 
 object JobBoard {
@@ -36,5 +29,11 @@ object JobBoard {
 }
 
 object JobBoardLive {
-  val layer: ULayer[Has[JobBoard]] = ZLayer.succeed(JobBoardLive())
+  val layer: ULayer[Has[JobBoard]] = {
+    val jobBoard = for {
+      queue <- Queue.unbounded[PendingJob]
+      jobBoard = JobBoardLive(queue)
+    } yield jobBoard
+    ZLayer.fromEffect(jobBoard)
+  }
 }
