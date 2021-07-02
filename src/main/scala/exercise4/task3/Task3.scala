@@ -2,9 +2,8 @@ package exercise4.task3
 
 import zio._
 import zio.clock.Clock
-import scala.concurrent.duration.DurationInt
+import zio.duration.durationInt
 import zio.duration.Duration
-import java.util.concurrent.TimeUnit
 
 object Task3 extends zio.App {
 
@@ -22,7 +21,7 @@ object Task3 extends zio.App {
     _ <- overseer.work().fork
     _ <- worker1.work().fork
     _ <- worker2.work().fork
-    _ <- ZIO.sleep(Duration.apply(1, TimeUnit.SECONDS))
+    _ <- ZIO.sleep(1.second)
     _ <- elder1.work().fork
     _ <- elder2.work().fork
     _ <- praiser.work().fork

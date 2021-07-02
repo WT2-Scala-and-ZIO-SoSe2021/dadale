@@ -6,7 +6,6 @@ import zio.duration.durationInt
 import zio.random._
 import zio.console._
 import zio.duration.Duration
-import java.util.concurrent.TimeUnit
 
 class Worker(val name: String) extends Robot {
 
@@ -27,7 +26,7 @@ class Worker(val name: String) extends Robot {
       for {
         _ <- putStrLn(s"$name had an error")
         _ <- JobBoard.submit(job)
-        _ <- ZIO.sleep(Duration.apply(10, TimeUnit.SECONDS))
+        _ <- ZIO.sleep(2.seconds)
         _ <- putStrLn(s"$name rebooted")
       } yield ()
     }
