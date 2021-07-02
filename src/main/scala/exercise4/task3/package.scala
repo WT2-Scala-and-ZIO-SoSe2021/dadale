@@ -3,6 +3,7 @@ package exercise4
 import zio._
 import zio.clock.Clock
 import zio.console.Console
+import zio.random.Random
 
 
 package object task3 {
@@ -11,6 +12,7 @@ package object task3 {
     with Has[News]
     with Clock
     with Console
+    with Random
 
   trait Robot {
     val name: String

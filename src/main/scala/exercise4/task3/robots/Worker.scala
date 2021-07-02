@@ -12,27 +12,27 @@ class Worker(val name: String) extends Robot {
 
   /** Takes jobs from the JobBoard, execute them and once completed.
     * Sleeps for the duration of the job before taking the next job.
-    * Publishes them on the CompletedJobsHub.    
+    * Publishes them on the CompletedJobsHub.
     */
   override def work(): ZIO[Has[JobBoard] with Has[
     CompletedJobsHub
-  ] with Clock with Random with Console, Nothing, Unit] = action.forever
+  ] with Clock with Random with Console, java.io.IOException, Unit] =
+    action.forever
 
   val action = for {
     job <- JobBoard.take()
     _ <- ZIO.sleep(job.duration)
-    random <- nextDoubleBetween(-0, 50)
-    _ <- putStrLn(s"random: $random")
-    _ <- ZIO.when(random <= 10) {
+    random <- nextDouble
+    _ <- ZIO.when(random <= 0.2) {
       for {
-        _ <- putStrLn("In error")
+        _ <- putStrLn(s"$name had an error")
         _ <- JobBoard.submit(job)
-        _ <- ZIO.sleep(Duration.apply(2, TimeUnit.SECONDS))
+        _ <- ZIO.sleep(Duration.apply(10, TimeUnit.SECONDS))
+        _ <- putStrLn(s"$name rebooted")
       } yield ()
     }
-    _ <- ZIO.when(random > 10) {
+    _ <- ZIO.when(random > 0.2) {
       for {
-        _ <- putStrLn("In success")
         _ <- CompletedJobsHub.publish(CompletedJob(job.name, this))
       } yield ()
     }
