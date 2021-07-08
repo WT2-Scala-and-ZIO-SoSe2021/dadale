@@ -1,5 +1,4 @@
 package exercise3
-
 package object temperature {
   type Temperature = Double
 

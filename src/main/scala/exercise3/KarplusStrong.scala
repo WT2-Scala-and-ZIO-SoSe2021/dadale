@@ -22,13 +22,12 @@ object KarplusStrong extends App {
       volume: Double = 1.0
   ): ZIO[Random, Throwable, Queue[Double]] = {
     if (frequency <= 0 || volume < 0.0 || volume > 1.0)
-      return ZIO.fail(new Throwable("Incorrect parameters"))
+      return ZIO.fail(new Throwable("Incorrect parameters"))    
 
     ZIO.foldLeft(0 to frequency)(new Queue[Double]()) { (acc, _) =>
       for {
         randomValue <- nextDoubleBetween(-0.5, 0.5)
-        queue <- ZIO.effectTotal(acc.enqueue(randomValue * volume))
-      } yield queue
+      } yield acc.enqueue(randomValue * volume)
     }
   }
 
